@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="MiniEcommerce.Console/MiniEcommerce.Console.csproj" />
+  <Project Path="MiniEcommerce.Tests/MiniEcommerce.Tests.csproj" />
+</Solution>
