@@ -77,8 +77,8 @@ void ListarCatalogo()
 
     Console.WriteLine();
     Console.WriteLine($"{"Cód.",-5}{"Produto",-25}{"Preço",-15}{"Estoque",-8}");
-    foreach (var p in catalogo.Listar())
-        Console.WriteLine($"{p.Id,-5}{p.Nome,-25}{Formatador.Moeda(p.Preco),-15}{p.Estoque,-8}");
+    foreach (var produto in catalogo.Listar())
+        ExibirLinhaCatalogo(produto);
 }
 
 void AdicionarAoCarrinho()
@@ -97,7 +97,7 @@ void VerCarrinho()
 
     Console.WriteLine();
     foreach (var item in carrinho.Itens)
-        Console.WriteLine($"[{item.Produto.Id}] {item.Quantidade}x {item.Produto.Nome} - {Formatador.Moeda(item.Produto.Preco)} = {Formatador.Moeda(item.Subtotal)}");
+        ExibirItemCarrinho(item);
     Console.WriteLine($"Total parcial: {Formatador.Moeda(carrinho.Total)}");
 }
 
@@ -119,6 +119,12 @@ void FinalizarPedido()
     Console.WriteLine(pedido.GerarResumo());
     Console.WriteLine("Compra realizada com sucesso! Estoque atualizado.");
 }
+
+void ExibirLinhaCatalogo(Produto produto) =>
+    Console.WriteLine($"{produto.Id,-5}{produto.Nome,-25}{Formatador.Moeda(produto.Preco),-15}{produto.Estoque,-8}");
+
+void ExibirItemCarrinho(ItemCarrinho item) =>
+    Console.WriteLine($"[{item.Produto.Id}] {item.Quantidade}x {item.Produto.Nome} - {Formatador.Moeda(item.Produto.Preco)} = {Formatador.Moeda(item.Subtotal)}");
 
 bool CarrinhoVazio()
 {

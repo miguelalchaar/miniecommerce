@@ -22,25 +22,42 @@ public class Pedido
     {
         ArgumentNullException.ThrowIfNull(carrinho);
 
+        GarantirCarrinhoPreenchido(carrinho);
+        GarantirEstoqueDisponivel(carrinho);
+
+        var itensPedido = BaixarEstoqueEGerarItens(carrinho);
+        carrinho.Limpar();
+
+        return new Pedido(itensPedido);
+    }
+
+    private static void GarantirCarrinhoPreenchido(CarrinhoDeCompras carrinho)
+    {
         if (carrinho.Itens.Count == 0)
             throw new InvalidOperationException("Não é possível finalizar um pedido com o carrinho vazio.");
+    }
 
-        // Valida tudo antes de baixar qualquer estoque (evita baixa parcial).
+    // Valida tudo antes de baixar qualquer estoque (evita baixa parcial).
+    private static void GarantirEstoqueDisponivel(CarrinhoDeCompras carrinho)
+    {
         foreach (var item in carrinho.Itens)
         {
             if (!item.Produto.TemEstoque(item.Quantidade))
                 throw EstoqueInsuficienteException.Para(item.Produto.Nome, item.Quantidade, item.Produto.Estoque);
         }
+    }
 
+    private static IReadOnlyList<ItemPedido> BaixarEstoqueEGerarItens(CarrinhoDeCompras carrinho)
+    {
         var itensPedido = new List<ItemPedido>();
+
         foreach (var item in carrinho.Itens)
         {
             item.Produto.BaixarEstoque(item.Quantidade);
             itensPedido.Add(new ItemPedido(item.Produto.Nome, item.Produto.Preco, item.Quantidade));
         }
 
-        carrinho.Limpar();
-        return new Pedido(itensPedido.AsReadOnly());
+        return itensPedido.AsReadOnly();
     }
 
     public string GerarResumo()

@@ -12,13 +12,16 @@ public class Catalogo
     {
         var produto = new Produto(nome, preco, estoque) { Id = _proximoId };
 
-        if (_produtos.Any(p => string.Equals(p.Nome, produto.Nome, StringComparison.OrdinalIgnoreCase)))
+        if (ExisteProdutoComNome(produto.Nome))
             throw new InvalidOperationException($"Já existe um produto cadastrado com o nome '{produto.Nome}'.");
 
         _produtos.Add(produto);
         _proximoId++;
         return produto;
     }
+
+    private bool ExisteProdutoComNome(string nome) =>
+        _produtos.Any(p => string.Equals(p.Nome, nome, StringComparison.OrdinalIgnoreCase));
 
     public Produto? BuscarPorId(int id) => _produtos.FirstOrDefault(p => p.Id == id);
 
